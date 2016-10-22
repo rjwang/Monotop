@@ -19,6 +19,10 @@ with open('proc_card_mg5.dat','w') as f:
     f.write("""
 import model /cvmfs/atlas.cern.ch/repo/sw/Generators/madgraph/models/latest/MonotopDMF_UFO -modelname
 define j = g u c d s b u~ c~ d~ s~ b~
+define l+ = e+ mu+ ta+
+define l- = e- mu- ta-
+define vl = ve vm vt
+define vl~ = ve~ vm~ vt~
 generate p p > t chi, (t > b W+, W+ > j j)
 add process p p > t~ chi, (t~ > b~ W-, W- > j j)
 output -f

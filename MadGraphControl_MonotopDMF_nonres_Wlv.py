@@ -23,8 +23,8 @@ define l+ = e+ mu+ ta+
 define l- = e- mu- ta-
 define vl = ve vm vt
 define vl~ = ve~ vm~ vt~
-generate p p > t psi psibar, (t > b W+, W+ > j j)
-add process p p > t~ psi psibar, (t~ > b~ W-, W- > j j)
+generate p p > t psi psibar, (t > b W+, W+ > l+ vl)
+add process p p > t~ psi psibar, (t~ > b~ W-, W- > l- vl~)
 output -f
             """)
     f.close()

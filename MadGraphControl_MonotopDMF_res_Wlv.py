@@ -4,14 +4,14 @@ job_option_name = runArgs.jobConfig[0]
 config_names = runArgs.jobConfig[0].split('.')[2].split('_')
 mMed = int(config_names[4][4:])
 mDM = int(config_names[5][2:])
-coupling_ar = float(0.5)
-coupling_gg = float(1.0)
+coupling_lambdas = float(0.2)
+coupling_yphis = float(0.4)
 
-print "=================== running MonotopDMF nonresonant model ================"
+print "=================== running MonotopDMF resonant model ================"
 print "Mediator mass: ", mMed
 print "DM mass: ", mDM
-print "coupling_ar: ", coupling_ar
-print "coupling_gg: ", coupling_gg
+print "coupling_lambdas: ", coupling_lambdas
+print "coupling_yphis: ", coupling_yphis
 print "======================================================================"
 
 
@@ -23,8 +23,8 @@ define l+ = e+ mu+ ta+
 define l- = e- mu- ta-
 define vl = ve vm vt
 define vl~ = ve~ vm~ vt~
-generate p p > t psi psibar, (t > b W+, W+ > j j)
-add process p p > t~ psi psibar, (t~ > b~ W-, W- > j j)
+generate p p > t chi, (t > b W+, W+ > l+ vl)
+add process p p > t~ chi, (t~ > b~ W-, W- > l- vl~)
 output -f
             """)
     f.close()
@@ -70,14 +70,14 @@ else:
     oldcard = open(paramcardname)
     newcard = open('param_card.dat','w')
     for line in oldcard:
-        if '# Mpsi' in line:
-            newcard.write('  1000023 %e # Mpsi \n'%(mDM))
-        elif '# MV' in line:
-            newcard.write('  32 %e # MV \n'%(mMed))
-        elif '# ar' in line:
-            newcard.write('  1 %e # ar \n'%(coupling_ar))
-        elif '# gg' in line:
-            newcard.write('  10 %e # gg \n'%(coupling_gg))
+        if '# MFM' in line:
+            newcard.write('  1000022 %e # MFM \n'%(mDM))
+        elif '# Mphi' in line:
+            newcard.write('  1000006 %e # Mphi \n'%(mMed))
+        elif '# lambdas' in line:
+            newcard.write('  2 %e # lambdas \n'%(coupling_lambdas))
+        elif '# yphis' in line:
+            newcard.write('  3 %e # yphis \n'%(coupling_yphis))
         else:
             newcard.write(line)
     oldcard.close()
@@ -87,7 +87,7 @@ run_name = "run_01"
 generate(run_card_loc='run_card.dat', param_card_loc='param_card.dat', mode=0,
          run_name=run_name, proc_dir=process_dir)
 
-stringy = 'Madgraph.'+str(runArgs.runNumber)+'.MonotopDMFnonresWjj.mDM'+str(mDM)+'.mMed'+str(mMed)
+stringy = 'Madgraph.'+str(runArgs.runNumber)+'.MonotopDMFresWjj.mDM'+str(mDM)+'.mMed'+str(mMed)
 out_lhe_name = stringy+'._00001.events.tar.gz'
 arrange_output(run_name=run_name, proc_dir=process_dir, outputDS=out_lhe_name)
 
@@ -102,14 +102,10 @@ subprocess.call(['rm','-f', lhe_name])
 out_lhe = lhe_name.split('.tar.gz')[0] + ".events"
 pp1 = subprocess.Popen(['cat',out_lhe],stdout=subprocess.PIPE)
 ############
-pp2 = subprocess.Popen(['sed','s/-1000023/1000022/g'],stdin=pp1.stdout,
-                       stdout=subprocess.PIPE)
-############
-pp3 = subprocess.Popen(['sed','s/1000023/1000022/g'],stdin=pp2.stdout,
+pp2 = subprocess.Popen(['sed','s/1xxxxx23/1000022/g'],stdin=pp1.stdout,
                        stdout=subprocess.PIPE)
 pp1.stdout.close()
-pp2.stdout.close()
-new_lhe_output = pp3.communicate()[0]
+new_lhe_output = pp2.communicate()[0]
 with open(out_lhe,'w') as f:
     f.write(new_lhe_output)
 subprocess.call(['tar','czvf',lhe_name, out_lhe])
