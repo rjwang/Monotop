@@ -33,8 +33,9 @@ process_dir = new_process()
 
 
 ##configure run_card
-runcardname = '/afs/cern.ch/work/r/rewang/dmgen/MCproduction/monotop/save/MadGraph_run_card_MonotopDMF.dat'
-##runcard = subprocess.Popen(['get_files','-data', runcardname]).communicate()
+#runcardname = '/afs/cern.ch/work/r/rewang/dmgen/MCproduction/monotop/save/MadGraph_run_card_MonotopDMF.dat'
+runcardname = 'MadGraph_run_card_MonotopDMF.dat'
+runcard = subprocess.Popen(['get_files','-data', runcardname]).communicate()
 ### this will be added when uploading to svn
 
 if not os.access(runcardname,os.R_OK):
@@ -61,8 +62,9 @@ else:
 
 
 #config parameter card
-paramcardname = '/afs/cern.ch/work/r/rewang/dmgen/MCproduction/monotop/save/MadGraph_param_card_MonotopDMF.dat'
-###paramcard = subprocess.Popen(['get_files','-data',paramcardname]).communicate()
+#paramcardname = '/afs/cern.ch/work/r/rewang/dmgen/MCproduction/monotop/save/MadGraph_param_card_MonotopDMF.dat'
+paramcardname = 'MadGraph_param_card_MonotopDMF.dat'
+paramcard = subprocess.Popen(['get_files','-data',paramcardname]).communicate()
 if not os.access(paramcardname, os.R_OK):
     print 'ERROR: Could not get param card'
     raise RuntimeError("parameter card '%s' missing!"%paramcardname)
@@ -102,7 +104,7 @@ subprocess.call(['rm','-f', lhe_name])
 out_lhe = lhe_name.split('.tar.gz')[0] + ".events"
 pp1 = subprocess.Popen(['cat',out_lhe],stdout=subprocess.PIPE)
 ############
-pp2 = subprocess.Popen(['sed','s/1xxxxx23/1000022/g'],stdin=pp1.stdout,
+pp2 = subprocess.Popen(['sed','s/1000023/1000022/g'],stdin=pp1.stdout,
                        stdout=subprocess.PIPE)
 pp1.stdout.close()
 new_lhe_output = pp2.communicate()[0]
